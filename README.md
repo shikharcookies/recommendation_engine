@@ -13,6 +13,13 @@ A production-style MVP system that assists credit analysts by transforming unstr
 - **RESTful API**: FastAPI backend with automatic documentation
 - **Database**: SQLite for persistence
 
+
+## 🎥 Demo
+
+Below is a quick walkthrough of the Counterparty Recommendation Engine.
+
+![Demo](demo.gif)
+
 ## Quick Start
 
 ### Backend Setup
