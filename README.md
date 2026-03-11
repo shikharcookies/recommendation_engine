@@ -16,9 +16,11 @@ A production-style MVP system that assists credit analysts by transforming unstr
 
 ## 🎥 Demo
 
-Below is a quick walkthrough of the Counterparty Recommendation Engine.
-
-![Demo](demo.gif)
+<p align="center">
+  <a href="https://youtu.be/vAZ9XV9PjxM">
+    <img src="https://img.youtube.com/vi/vAZ9XV9PjxM/0.jpg" width="750">
+  </a>
+</p>
 
 ## Quick Start
 
