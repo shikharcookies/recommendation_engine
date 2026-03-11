@@ -1,0 +1,228 @@
+/* Dark Theme with Green Accents */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+:root {
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #1a1a1a;
+  --bg-card: #1e1e1e;
+  --bg-card-hover: #252525;
+  --accent-green: #00ff88;
+  --accent-green-dark: #00cc6a;
+  --accent-blue: #00d4ff;
+  --accent-purple: #a855f7;
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --text-muted: #666666;
+  --border-color: #2a2a2a;
+  --success: #00ff88;
+  --warning: #ffa500;
+  --danger: #ff4444;
+}
+
+/* Light Theme Variables */
+body.light-theme {
+  --bg-primary: #f5f5f5;
+  --bg-secondary: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f9f9f9;
+  --accent-green: #00a86b;
+  --accent-green-dark: #008556;
+  --accent-blue: #0088cc;
+  --accent-purple: #8b5cf6;
+  --text-primary: #1a1a1a;
+  --text-secondary: #666666;
+  --text-muted: #999999;
+  --border-color: #e0e0e0;
+  --success: #00a86b;
+  --warning: #ff9800;
+  --danger: #dc3545;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', 'Roboto', "Helvetica Neue", sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Material Design Overrides for Dark Theme */
+.mat-mdc-card {
+  background-color: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3) !important;
+  margin-bottom: 20px !important;
+}
+
+.mat-mdc-card:hover {
+  background-color: var(--bg-card-hover) !important;
+  border-color: var(--accent-green) !important;
+  transition: all 0.3s ease;
+}
+
+.mat-mdc-card-title {
+  color: var(--text-primary) !important;
+  font-weight: 600 !important;
+  font-size: 18px !important;
+  margin-bottom: 16px !important;
+}
+
+.mat-mdc-form-field {
+  color: var(--text-primary) !important;
+  margin-bottom: 16px !important;
+}
+
+.mat-mdc-text-field-wrapper {
+  background-color: var(--bg-secondary) !important;
+}
+
+.mat-mdc-form-field-focus-overlay {
+  background-color: var(--accent-green) !important;
+  opacity: 0.1 !important;
+}
+
+.mat-mdc-input-element {
+  color: var(--text-primary) !important;
+  caret-color: var(--accent-green) !important;
+}
+
+.mat-mdc-form-field-label {
+  color: var(--text-secondary) !important;
+}
+
+.mat-mdc-form-field .mat-mdc-floating-label {
+  color: var(--text-secondary) !important;
+}
+
+.mat-mdc-form-field.mat-focused .mat-mdc-floating-label {
+  color: var(--accent-green) !important;
+}
+
+.mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-notched-outline .mat-mdc-notched-outline__leading,
+.mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-notched-outline .mat-mdc-notched-outline__trailing,
+.mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-notched-outline .mat-mdc-notched-outline__notch {
+  border-color: var(--border-color) !important;
+}
+
+.mat-mdc-form-field.mat-focused .mat-mdc-notched-outline .mat-mdc-notched-outline__leading,
+.mat-mdc-form-field.mat-focused .mat-mdc-notched-outline .mat-mdc-notched-outline__trailing,
+.mat-mdc-form-field.mat-focused .mat-mdc-notched-outline .mat-mdc-notched-outline__notch {
+  border-color: var(--accent-green) !important;
+}
+
+.mat-mdc-form-field-focus-overlay {
+  background-color: transparent !important;
+}
+
+.mat-mdc-outlined-button {
+  border-color: var(--accent-green) !important;
+  color: var(--accent-green) !important;
+}
+
+.mat-mdc-raised-button.mat-primary {
+  background-color: var(--accent-green) !important;
+  color: var(--bg-primary) !important;
+  font-weight: 600 !important;
+}
+
+.mat-mdc-raised-button.mat-accent {
+  background-color: var(--accent-blue) !important;
+  color: var(--bg-primary) !important;
+}
+
+.mat-button-toggle-group {
+  border: 1px solid var(--border-color) !important;
+}
+
+.mat-button-toggle {
+  background-color: var(--bg-card) !important;
+  color: var(--text-secondary) !important;
+}
+
+.mat-button-toggle-checked {
+  background-color: var(--accent-green) !important;
+  color: var(--bg-primary) !important;
+}
+
+.mat-button-toggle-checked .mat-icon {
+  color: var(--bg-primary) !important;
+}
+
+.mat-expansion-panel {
+  background-color: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.mat-expansion-panel-header {
+  color: var(--text-primary) !important;
+}
+
+.mat-expansion-panel-header-title {
+  color: var(--text-primary) !important;
+}
+
+.mat-expansion-panel-header:hover {
+  background-color: var(--bg-card-hover) !important;
+}
+
+.mat-expansion-panel-body {
+  color: var(--text-primary) !important;
+}
+
+.mat-expansion-panel-content {
+  color: var(--text-primary) !important;
+}
+
+/* Ensure all text in expansion panels is white */
+.mat-expansion-panel p,
+.mat-expansion-panel ul,
+.mat-expansion-panel li {
+  color: var(--text-primary) !important;
+}
+
+.mat-expansion-panel .mat-expansion-panel-header-title {
+  color: var(--text-primary) !important;
+  font-weight: 500 !important;
+}
+
+/* Placeholder text */
+.mat-mdc-input-element::placeholder {
+  color: var(--text-muted) !important;
+  opacity: 0.7;
+}
+
+/* Textarea */
+textarea.mat-mdc-input-element {
+  color: var(--text-primary) !important;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-green);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-green-dark);
+}

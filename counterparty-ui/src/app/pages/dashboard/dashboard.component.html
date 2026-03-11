@@ -1,0 +1,326 @@
+<div class="dashboard-container">
+  <div class="header">
+    <div class="header-content">
+      <h1>Counterparty Recommendation Engine</h1>
+      <button mat-icon-button class="theme-toggle" (click)="themeService.toggleTheme()" 
+              [attr.aria-label]="themeService.isDarkMode() ? 'Switch to light mode' : 'Switch to dark mode'">
+        <mat-icon>{{ themeService.isDarkMode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="content-grid">
+    <!-- LEFT PANEL: Input -->
+    <div class="left-panel">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Counterparty Information</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Counterparty Name</mat-label>
+            <input matInput [(ngModel)]="counterparty.name" placeholder="e.g., Barclays Bank PLC" required>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Country</mat-label>
+            <input matInput [(ngModel)]="counterparty.country" placeholder="e.g., UK">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Sector</mat-label>
+            <input matInput [(ngModel)]="counterparty.sector" placeholder="e.g., Banking">
+          </mat-form-field>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Credit Analysis</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <!-- Input Method Selector -->
+          <mat-button-toggle-group [(ngModel)]="inputMethod" class="input-method-toggle">
+            <mat-button-toggle value="text">
+              <mat-icon>text_fields</mat-icon>
+              Text
+            </mat-button-toggle>
+            <mat-button-toggle value="file">
+              <mat-icon>upload_file</mat-icon>
+              File (PDF/DOCX)
+            </mat-button-toggle>
+            <mat-button-toggle value="url">
+              <mat-icon>link</mat-icon>
+              URL
+            </mat-button-toggle>
+          </mat-button-toggle-group>
+
+          <!-- Text Input -->
+          <div *ngIf="inputMethod === 'text'">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Paste Credit Analysis Text</mat-label>
+              <textarea 
+                matInput 
+                [(ngModel)]="analysisText" 
+                rows="15"
+                placeholder="Paste your credit analysis here...&#10;&#10;Include sections like:&#10;- Company Profile&#10;- Assets&#10;- Liquidity&#10;- Strategy&#10;- Means&#10;- Performance"></textarea>
+            </mat-form-field>
+          </div>
+
+          <!-- File Upload -->
+          <div *ngIf="inputMethod === 'file'" class="file-upload-section">
+            <input 
+              type="file" 
+              #fileInput 
+              (change)="onFileSelected($event)" 
+              accept=".pdf,.docx"
+              style="display: none">
+            
+            <button 
+              mat-raised-button 
+              color="accent" 
+              (click)="fileInput.click()"
+              class="upload-button">
+              <mat-icon>cloud_upload</mat-icon>
+              Choose File (PDF or DOCX)
+            </button>
+            
+            <div *ngIf="selectedFileName" class="selected-file">
+              <mat-icon>description</mat-icon>
+              <span>{{ selectedFileName }}</span>
+              <button mat-icon-button (click)="clearFile()">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+            
+            <p class="file-hint">Maximum file size: 10MB</p>
+          </div>
+
+          <!-- URL Input -->
+          <div *ngIf="inputMethod === 'url'">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Document URL</mat-label>
+              <input 
+                matInput 
+                [(ngModel)]="analysisUrl" 
+                placeholder="https://example.com/analysis.pdf"
+                type="url">
+              <mat-icon matPrefix>link</mat-icon>
+            </mat-form-field>
+            <p class="url-hint">Provide a direct link to a PDF or DOCX document</p>
+          </div>
+
+          <button 
+            mat-raised-button 
+            color="primary" 
+            class="generate-button"
+            (click)="generateRecommendation()"
+            [disabled]="loading">
+            <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+            <span *ngIf="!loading">Generate Recommendation</span>
+            <span *ngIf="loading">Generating...</span>
+          </button>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- RIGHT PANEL: Output -->
+    <div class="right-panel">
+      <div *ngIf="!analysisResult && !loading" class="empty-state">
+        <mat-card>
+          <mat-card-content>
+            <p>Enter counterparty information and paste analysis text, then click "Generate Recommendation" to see results here.</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div *ngIf="analysisResult">
+        <!-- Scorecard -->
+        <mat-card class="scorecard">
+          <mat-card-header>
+            <mat-card-title>
+              Credit Scorecard
+              <span class="rating-info" 
+                    title="Rating Benchmarks: 5=Excellent, 4=Good, 3=Moderate, 2=Weak, 1=Poor. Click for details."
+                    (click)="showBenchmarks = !showBenchmarks">ⓘ</span>
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="scores-grid">
+              <div class="score-item">
+                <span class="score-label">Asset Quality</span>
+                <span class="score-value" [class.good]="analysisResult.scores.asset_quality >= 4"
+                      [class.moderate]="analysisResult.scores.asset_quality === 3"
+                      [class.poor]="analysisResult.scores.asset_quality <= 2">
+                  {{ analysisResult.scores.asset_quality }} / 5
+                </span>
+              </div>
+              <div class="score-item">
+                <span class="score-label">Liquidity</span>
+                <span class="score-value" [class.good]="analysisResult.scores.liquidity >= 4"
+                      [class.moderate]="analysisResult.scores.liquidity === 3"
+                      [class.poor]="analysisResult.scores.liquidity <= 2">
+                  {{ analysisResult.scores.liquidity }} / 5
+                </span>
+              </div>
+              <div class="score-item">
+                <span class="score-label">Capitalisation</span>
+                <span class="score-value" [class.good]="analysisResult.scores.capitalisation >= 4"
+                      [class.moderate]="analysisResult.scores.capitalisation === 3"
+                      [class.poor]="analysisResult.scores.capitalisation <= 2">
+                  {{ analysisResult.scores.capitalisation }} / 5
+                </span>
+              </div>
+              <div class="score-item">
+                <span class="score-label">Profitability</span>
+                <span class="score-value" [class.good]="analysisResult.scores.profitability >= 4"
+                      [class.moderate]="analysisResult.scores.profitability === 3"
+                      [class.poor]="analysisResult.scores.profitability <= 2">
+                  {{ analysisResult.scores.profitability }} / 5
+                </span>
+              </div>
+            </div>
+            <div class="overall-score">
+              <span class="score-label">Overall Score</span>
+              <span class="score-value large">{{ getOverallScore().toFixed(2) }} / 5</span>
+            </div>
+
+            <div class="rating-benchmarks" *ngIf="showBenchmarks">
+              <h4>📊 Rating Benchmarks (Industry Standards)</h4>
+              <ul>
+                <li><span class="score-indicator score-5">5</span> Excellent - Top tier performance</li>
+                <li><span class="score-indicator score-4">4</span> Good - Above average, strong position</li>
+                <li><span class="score-indicator score-3">3</span> Moderate - Average, acceptable levels</li>
+                <li><span class="score-indicator score-2">2</span> Weak - Below average, needs attention</li>
+                <li><span class="score-indicator score-1">1</span> Poor - Significant concerns</li>
+              </ul>
+              <p style="margin-top: 10px; font-size: 11px; color: var(--text-muted);">
+                Scores based on: NPL &lt;2% (5) to &gt;10% (1), LCR &gt;150% (5) to &lt;80% (1), 
+                CET1 &gt;15% (5) to &lt;8% (1), ROAE &gt;12% (5) to &lt;5% (1)
+              </p>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Extracted Financial Signals -->
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Extracted Financial Signals</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="signals-section">
+              <div *ngIf="analysisResult.signals && analysisResult.signals.length > 0" class="signals-list">
+                <div *ngFor="let signal of analysisResult.signals" class="signal-item">
+                  <span class="signal-type">{{ signal.signal_type }}</span>
+                  <span class="signal-value">{{ signal.value }}{{ signal.unit }}</span>
+                </div>
+              </div>
+              <p *ngIf="!analysisResult.signals || analysisResult.signals.length === 0" class="no-signals">
+                No financial signals detected in analysis text.
+              </p>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Structured Analysis -->
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Structured Analysis</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <mat-accordion>
+              <mat-expansion-panel *ngIf="analysisResult.structured_analysis.company_profile">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>Company Profile</mat-panel-title>
+                </mat-expansion-panel-header>
+                <ul *ngIf="getBullets('company_profile_bullets')" class="bullet-list">
+                  <li *ngFor="let bullet of getBullets('company_profile_bullets')">{{ bullet }}</li>
+                </ul>
+                <p *ngIf="!getBullets('company_profile_bullets')">{{ analysisResult.structured_analysis.company_profile }}</p>
+              </mat-expansion-panel>
+
+              <mat-expansion-panel *ngIf="analysisResult.structured_analysis.assets">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>Assets</mat-panel-title>
+                </mat-expansion-panel-header>
+                <ul *ngIf="getBullets('assets_bullets')" class="bullet-list">
+                  <li *ngFor="let bullet of getBullets('assets_bullets')">{{ bullet }}</li>
+                </ul>
+                <p *ngIf="!getBullets('assets_bullets')">{{ analysisResult.structured_analysis.assets }}</p>
+              </mat-expansion-panel>
+
+              <mat-expansion-panel *ngIf="analysisResult.structured_analysis.liquidity">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>Liquidity</mat-panel-title>
+                </mat-expansion-panel-header>
+                <ul *ngIf="getBullets('liquidity_bullets')" class="bullet-list">
+                  <li *ngFor="let bullet of getBullets('liquidity_bullets')">{{ bullet }}</li>
+                </ul>
+                <p *ngIf="!getBullets('liquidity_bullets')">{{ analysisResult.structured_analysis.liquidity }}</p>
+              </mat-expansion-panel>
+
+              <mat-expansion-panel *ngIf="analysisResult.structured_analysis.strategy">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>Strategy</mat-panel-title>
+                </mat-expansion-panel-header>
+                <ul *ngIf="getBullets('strategy_bullets')" class="bullet-list">
+                  <li *ngFor="let bullet of getBullets('strategy_bullets')">{{ bullet }}</li>
+                </ul>
+                <p *ngIf="!getBullets('strategy_bullets')">{{ analysisResult.structured_analysis.strategy }}</p>
+              </mat-expansion-panel>
+
+              <mat-expansion-panel *ngIf="analysisResult.structured_analysis.means">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>Means</mat-panel-title>
+                </mat-expansion-panel-header>
+                <ul *ngIf="getBullets('means_bullets')" class="bullet-list">
+                  <li *ngFor="let bullet of getBullets('means_bullets')">{{ bullet }}</li>
+                </ul>
+                <p *ngIf="!getBullets('means_bullets')">{{ analysisResult.structured_analysis.means }}</p>
+              </mat-expansion-panel>
+
+              <mat-expansion-panel *ngIf="analysisResult.structured_analysis.performance">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>Performance</mat-panel-title>
+                </mat-expansion-panel-header>
+                <ul *ngIf="getBullets('performance_bullets')" class="bullet-list">
+                  <li *ngFor="let bullet of getBullets('performance_bullets')">{{ bullet }}</li>
+                </ul>
+                <p *ngIf="!getBullets('performance_bullets')">{{ analysisResult.structured_analysis.performance }}</p>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Recommendation Memo -->
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Recommendation Memo</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="memo-content">
+              <pre>{{ analysisResult.memo }}</pre>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Export Options -->
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Export Options</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="export-buttons">
+              <button mat-raised-button color="accent" (click)="exportPDF()">
+                Export as PDF
+              </button>
+              <button mat-raised-button color="accent" (click)="exportDOCX()">
+                Export as DOCX
+              </button>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>
