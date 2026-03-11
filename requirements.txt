@@ -6,21 +6,18 @@
 # 1. Install Python dependencies:
 #    pip install -r requirements.txt
 #
-# 2. Download spaCy language model:
-#    python -m spacy download en_core_web_sm
-#
-# 3. Install Node.js dependencies (for frontend):
+# 2. Install Node.js dependencies (for frontend):
 #    cd counterparty-ui
 #    npm install
 #
-# 4. Set up environment variables:
+# 3. Set up environment variables:
 #    cp .env.example .env
 #    # Edit .env and add your GEMINI_API_KEY
 #
-# 5. Run backend:
+# 4. Run backend:
 #    uvicorn app.main:app --reload
 #
-# 6. Run frontend (in separate terminal):
+# 5. Run frontend (in separate terminal):
 #    cd counterparty-ui
 #    npm start
 
@@ -38,8 +35,7 @@ pydantic==2.9.0
 pydantic-settings==2.5.2
 
 # NLP & Text Processing
-spacy==3.7.2
-# After installing spacy, run: python -m spacy download en_core_web_sm
+# (Removed spacy - using regex-based signal extraction instead)
 
 # Document Processing
 pdfminer.six==20221105

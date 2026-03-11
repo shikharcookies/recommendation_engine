@@ -1,0 +1,91 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+venv/
+ENV/
+env/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Documentation (generated)
+*.md
+!README.md
+!QUICK_START.md
+!ARCHITECTURE.md
+!FINAL_CHANGES.md
+!SETUP_GUIDE.md
+
+# Logs
+*.log
+logs/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.hypothesis/
+test_*.py
+
+# Angular
+counterparty-ui/node_modules/
+counterparty-ui/dist/
+counterparty-ui/.angular/
+counterparty-ui/tmp/
+counterparty-ui/out-tsc/
+counterparty-ui/.sass-cache/
+counterparty-ui/connect.lock
+counterparty-ui/coverage/
+counterparty-ui/libpeerconnection.log
+counterparty-ui/npm-debug.log
+counterparty-ui/yarn-error.log
+counterparty-ui/testem.log
+counterparty-ui/typings/
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+
+# Kiro specs (optional - remove if you want to track specs)
+.kiro/

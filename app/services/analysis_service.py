@@ -23,6 +23,10 @@ class AnalysisService:
         self.scoring_engine = ScoringEngine()
         self.summarizer = TextSummarizer()
         
+        # TEMPORARY: Force mock LLM to avoid rate limiting
+        # Change use_mock_llm=True back to False when you want to use Gemini again
+        use_mock_llm = False
+        
         # Determine which LLM service to use
         api_key = getattr(settings, 'gemini_api_key', None) or getattr(settings, 'openrouter_api_key', 'your_api_key_here')
         

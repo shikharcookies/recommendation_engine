@@ -15,7 +15,7 @@ class GeminiLLMService:
         self.api_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent"
         self.max_retries = 5  # Increased retries for rate limiting
         self.last_request_time = 0
-        self.min_request_interval = 1.0  # Minimum 1 second between requests
+        self.min_request_interval = 3.0  # Increased to 3 seconds between requests
     
     async def generate_narrative(
         self,
