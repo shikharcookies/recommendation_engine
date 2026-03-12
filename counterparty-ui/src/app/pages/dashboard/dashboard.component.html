@@ -4,7 +4,7 @@
       <h1>Counterparty Recommendation Engine</h1>
       <button mat-icon-button class="theme-toggle" (click)="themeService.toggleTheme()" 
               [attr.aria-label]="themeService.isDarkMode() ? 'Switch to light mode' : 'Switch to dark mode'">
-        <mat-icon>{{ themeService.isDarkMode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+        <span class="icon-text">{{ themeService.isDarkMode() ? '☀️' : '🌙' }}</span>
       </button>
     </div>
   </div>
@@ -42,15 +42,15 @@
           <!-- Input Method Selector -->
           <mat-button-toggle-group [(ngModel)]="inputMethod" class="input-method-toggle">
             <mat-button-toggle value="text">
-              <mat-icon>text_fields</mat-icon>
+              <span class="icon-text">📝</span>
               Text
             </mat-button-toggle>
             <mat-button-toggle value="file">
-              <mat-icon>upload_file</mat-icon>
+              <span class="icon-text">📄</span>
               File (PDF/DOCX)
             </mat-button-toggle>
             <mat-button-toggle value="url">
-              <mat-icon>link</mat-icon>
+              <span class="icon-text">🔗</span>
               URL
             </mat-button-toggle>
           </mat-button-toggle-group>
@@ -81,15 +81,15 @@
               color="accent" 
               (click)="fileInput.click()"
               class="upload-button">
-              <mat-icon>cloud_upload</mat-icon>
+              <span class="icon-text">☁️</span>
               Choose File (PDF or DOCX)
             </button>
             
             <div *ngIf="selectedFileName" class="selected-file">
-              <mat-icon>description</mat-icon>
+              <span class="icon-text">📋</span>
               <span>{{ selectedFileName }}</span>
               <button mat-icon-button (click)="clearFile()">
-                <mat-icon>close</mat-icon>
+                <span class="icon-text">✖</span>
               </button>
             </div>
             
@@ -105,7 +105,7 @@
                 [(ngModel)]="analysisUrl" 
                 placeholder="https://example.com/analysis.pdf"
                 type="url">
-              <mat-icon matPrefix>link</mat-icon>
+              <span matPrefix class="icon-text">🔗 </span>
             </mat-form-field>
             <p class="url-hint">Provide a direct link to a PDF or DOCX document</p>
           </div>
